@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Жанерке Серикбай — CRM Specialist | Bitrix24 & amoCRM</title>
+<style>
+  :root {
+    --bg: #0b0e14;
+    --bg-alt: #10141d;
+    --surface: #161b26;
+    --surface-2: #1c2230;
+    --border: #262d3d;
+    --text: #eef1f6;
+    --text-dim: #9aa4b8;
+    --accent: #7c5cff;
+    --accent-2: #22d3ee;
+    --accent-grad: linear-gradient(135deg, #7c5cff 0%, #22d3ee 100%);
+    --radius: 18px;
+    --shadow: 0 20px 60px rgba(0,0,0,0.35);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  a { text-decoration: none; color: inherit; }
+  ul { list-style: none; }
+
+  .container {
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  section { position: relative; padding: 120px 0; }
+  section:nth-of-type(odd) { background: var(--bg); }
+  section:nth-of-type(even) { background: var(--bg-alt); }
+
+  /* Background glow accents */
+  .glow {
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    filter: blur(140px);
+    opacity: 0.18;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .glow.purple { background: var(--accent); }
+  .glow.cyan { background: var(--accent-2); }
+
+  /* ===== Scroll reveal animations ===== */
+  .reveal {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .reveal-scale {
+    opacity: 0;
+    transform: scale(0.92);
+    transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal-scale.visible {
+    opacity: 1;
+    transform: scale(1);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal, .reveal-scale {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+
+  /* ===== Header ===== */
+  header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: rgba(11, 14, 20, 0.7);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s ease, background 0.3s ease;
+  }
+  header.scrolled {
+    border-bottom: 1px solid var(--border);
+    background: rgba(11, 14, 20, 0.9);
+  }
+  .nav-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 24px;
+    max-width: 1160px;
+    margin: 0 auto;
+  }
+  .logo {
+    font-weight: 700;
+    font-size: 1.15rem;
+    letter-spacing: 0.02em;
+    background: var(--accent-grad);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  nav ul {
+    display: flex;
+    gap: 36px;
+  }
+  nav a {
+    font-size: 0.92rem;
+    color: var(--text-dim);
+    font-weight: 500;
+    transition: color 0.2s ease;
+    position: relative;
+  }
+  nav a:hover { color: var(--text); }
+  nav a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    width: 0;
+    height: 2px;
+    background: var(--accent-grad);
+    transition: width 0.25s ease;
+  }
+  nav a:hover::after { width: 100%; }
+
+  .nav-cta {
+    padding: 10px 22px;
+    border-radius: 999px;
+    background: var(--accent-grad);
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.88rem;
+    white-space: nowrap;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .nav-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(124, 92, 255, 0.35);
+  }
+
+  .burger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    z-index: 1001;
+  }
+  .burger span {
+    width: 24px;
+    height: 2px;
+    background: var(--text);
+    border-radius: 2px;
+    transition: 0.3s ease;
+  }
+
+  /* ===== Hero ===== */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding-top: 100px;
+    padding-bottom: 60px;
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 60px;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+  }
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 16px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    font-size: 0.82rem;
+    color: var(--accent-2);
+    font-weight: 600;
+    margin-bottom: 24px;
+    letter-spacing: 0.02em;
+  }
+  .eyebrow .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent-2);
+    box-shadow: 0 0 10px var(--accent-2);
+  }
+  h1 {
+    font-size: clamp(2.4rem, 5vw, 3.6rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+  .hero-role {
+    font-size: 1.15rem;
+    font-weight: 600;
+    background: var(--accent-grad);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: 22px;
+  }
+  .hero p {
+    color: var(--text-dim);
+    font-size: 1.02rem;
+    max-width: 560px;
+    margin-bottom: 14px;
+  }
+  .hero-actions {
+    display: flex;
+    gap: 16px;
+    margin-top: 32px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    padding: 15px 30px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.96rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    cursor: pointer;
+    border: none;
+  }
+  .btn-primary {
+    background: var(--accent-grad);
+    color: #fff;
+  }
+  .btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 30px rgba(124, 92, 255, 0.35);
+  }
+  .btn-outline {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .btn-outline:hover {
+    border-color: var(--accent-2);
+    color: var(--accent-2);
+    transform: translateY(-3px);
+  }
+
+  /* Hero stats card */
+  .hero-side {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 30px 28px;
+    box-shadow: var(--shadow);
+  }
+  .stat-number {
+    font-size: 2.6rem;
+    font-weight: 800;
+    background: var(--accent-grad);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    line-height: 1;
+  }
+  .stat-label {
+    color: var(--text-dim);
+    font-size: 0.92rem;
+    margin-top: 8px;
+  }
+  .stat-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .stack-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 4px;
+  }
+  .stack-tags span {
+    padding: 7px 14px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 0.82rem;
+    color: var(--text-dim);
+  }
+
+  /* ===== Section headings ===== */
+  .section-tag {
+    display: inline-block;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--accent-2);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .section-title {
+    font-size: clamp(1.8rem, 3.4vw, 2.5rem);
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    margin-bottom: 20px;
+    max-width: 780px;
+  }
+  .section-lead {
+    color: var(--text-dim);
+    max-width: 720px;
+    font-size: 1.02rem;
+    margin-bottom: 50px;
+  }
+
+  /* ===== About ===== */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: 60px;
+    align-items: start;
+  }
+  .about-name {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .about-role {
+    color: var(--accent-2);
+    font-weight: 600;
+    margin-bottom: 24px;
+  }
+  .about-text p {
+    color: var(--text-dim);
+    margin-bottom: 18px;
+    font-size: 1rem;
+  }
+  .badge-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  .badge-row span {
+    padding: 8px 16px;
+    border-radius: 999px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    font-size: 0.85rem;
+    color: var(--text-dim);
+  }
+
+  /* ===== Competencies ===== */
+  .comp-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .comp-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 34px 28px;
+    transition: transform 0.25s ease, border-color 0.25s ease;
+  }
+  .comp-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--accent);
+  }
+  .comp-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    background: var(--accent-grad);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    margin-bottom: 22px;
+  }
+  .comp-card h3 {
+    font-size: 1.18rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+  .comp-card ul li {
+    color: var(--text-dim);
+    font-size: 0.92rem;
+    padding: 6px 0 6px 20px;
+    position: relative;
+  }
+  .comp-card ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 15px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent-2);
+  }
+
+  /* ===== Services ===== */
+  .service-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .service-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px 26px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .service-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow);
+  }
+  .service-num {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 14px;
+    letter-spacing: 0.05em;
+  }
+  .service-card h3 {
+    font-size: 1.12rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .service-card p {
+    color: var(--text-dim);
+    font-size: 0.92rem;
+  }
+
+  /* ===== Why ===== */
+  .why-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  .why-item {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px 24px;
+  }
+  .why-check {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--accent-grad);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #fff;
+  }
+  .why-item p { color: var(--text-dim); font-size: 0.96rem; }
+
+  /* ===== Tools ===== */
+  .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+  }
+  .tool-chip {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 26px 20px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: transform 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  }
+  .tool-chip:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent-2);
+    color: var(--accent-2);
+  }
+
+  /* ===== Results ===== */
+  .results-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .result-chip {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 22px;
+    font-size: 0.96rem;
+  }
+  .result-chip .why-check { width: 28px; height: 28px; font-size: 0.8rem; }
+
+  /* ===== Projects ===== */
+  .project-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 40px;
+    margin-bottom: 28px;
+  }
+  .project-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .project-head h3 {
+    font-size: 1.5rem;
+    font-weight: 800;
+  }
+  .project-industry {
+    color: var(--accent-2);
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-top: 6px;
+  }
+  .project-tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .project-tools span {
+    padding: 6px 13px;
+    background: var(--surface-2);
+    border-radius: 999px;
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+  }
+  .project-body {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+  }
+  .project-col h4 {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    margin-bottom: 14px;
+    font-weight: 700;
+  }
+  .project-col p, .project-col li {
+    color: var(--text-dim);
+    font-size: 0.92rem;
+  }
+  .project-col ul li {
+    padding: 5px 0 5px 18px;
+    position: relative;
+  }
+  .project-col ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 13px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent-2);
+  }
+
+  /* ===== Contact ===== */
+  .contact-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 28px;
+    padding: 70px 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .contact-wrap::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--accent-grad);
+    opacity: 0.06;
+  }
+  .contact-inner { position: relative; z-index: 1; }
+  .contact-wrap .section-title { margin: 0 auto 16px; }
+  .contact-wrap p {
+    color: var(--text-dim);
+    max-width: 560px;
+    margin: 0 auto 40px;
+  }
+  .contact-methods {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .contact-card {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 26px 34px;
+    min-width: 220px;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+  .contact-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--accent-2);
+  }
+  .contact-card .label {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent-2);
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .contact-card .value {
+    font-weight: 600;
+    font-size: 1rem;
+  }
+
+  footer {
+    padding: 40px 0;
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 0.88rem;
+    border-top: 1px solid var(--border);
+  }
+  footer strong { color: var(--text); }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 900px) {
+    section { padding: 80px 0; }
+    .hero-grid { grid-template-columns: 1fr; }
+    .about-grid { grid-template-columns: 1fr; gap: 30px; }
+    .comp-grid, .service-grid { grid-template-columns: 1fr; }
+    .why-grid, .results-grid { grid-template-columns: 1fr; }
+    .tools-grid { grid-template-columns: repeat(2, 1fr); }
+    .project-body { grid-template-columns: 1fr; gap: 20px; }
+    .contact-wrap { padding: 50px 24px; }
+  }
+
+  @media (max-width: 760px) {
+    nav ul {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 72%;
+      height: 100vh;
+      background: var(--bg-alt);
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 30px;
+      transition: right 0.35s ease;
+      border-left: 1px solid var(--border);
+    }
+    nav ul.open { right: 0; }
+    .nav-cta { display: none; }
+    .burger { display: flex; }
+  }
+</style>
+</head>
+<body>
+
+<header id="site-header">
+  <div class="nav-wrap">
+    <a href="#home" class="logo">Ж. Серикбай</a>
+    <nav>
+      <ul id="nav-list">
+        <li><a href="#home" class="nav-link">Главная</a></li>
+        <li><a href="#about" class="nav-link">Обо мне</a></li>
+        <li><a href="#skills" class="nav-link">Компетенции</a></li>
+        <li><a href="#services" class="nav-link">Услуги</a></li>
+        <li><a href="#tools" class="nav-link">Инструменты</a></li>
+        <li><a href="#projects" class="nav-link">Проекты</a></li>
+        <li><a href="#contact" class="nav-link">Контакты</a></li>
+      </ul>
+    </nav>
+    <a href="#contact" class="nav-cta">Связаться</a>
+    <div class="burger" id="burger"><span></span><span></span><span></span></div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section id="home" class="hero">
+  <div class="glow purple" style="top:-100px; left:-150px;"></div>
+  <div class="glow cyan" style="bottom:-150px; right:-100px;"></div>
+  <div class="container hero-grid">
+    <div>
+      <div class="eyebrow"><span class="dot"></span> Открыта для новых проектов</div>
+      <h1>Жанерке Серикбай</h1>
+      <div class="hero-role">CRM Specialist · Bitrix24 & amoCRM</div>
+      <p>Автоматизирую бизнес-процессы, настраиваю CRM-системы и помогаю компаниям выстроить удобную работу сотрудников без лишней рутины.</p>
+      <p>Специализируюсь на внедрении и настройке Bitrix24 и amoCRM: бизнес-процессы, воронки продаж, аналитика, проекты, документооборот, HR-процессы и AI-автоматизация.</p>
+      <div class="hero-actions">
+        <a href="#projects" class="btn btn-primary">Посмотреть проекты</a>
+        <a href="#contact" class="btn btn-outline">Связаться</a>
+      </div>
+    </div>
+    <div class="hero-side">
+      <div class="stat-card stat-row">
+        <div>
+          <div class="stat-number">50+</div>
+          <div class="stat-label">реализованных проектов</div>
+        </div>
+        <div>
+          <div class="stat-number">100+</div>
+          <div class="stat-label">автоматизированных процессов</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label" style="margin-bottom:10px;">Стек и специализация</div>
+        <div class="stack-tags">
+          <span>CRM</span>
+          <span>Bitrix24</span>
+          <span>amoCRM</span>
+          <span>Tilda</span>
+          <span>AI</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="container">
+    <div class="section-tag">Обо мне</div>
+    <div class="section-title">Помогаю компаниям автоматизировать работу и сделать процессы прозрачными</div>
+    <div class="about-grid">
+      <div>
+        <div class="about-name">Жанерке Серикбай</div>
+        <div class="about-role">CRM Specialist | Bitrix24 & amoCRM</div>
+        <div class="badge-row">
+          <span>Добыча ископаемых</span>
+          <span>Страхование</span>
+          <span>Образование</span>
+          <span>Производство</span>
+          <span>Недвижимость</span>
+          <span>IT</span>
+          <span>Розничная торговля</span>
+        </div>
+      </div>
+      <div class="about-text">
+        <p>Я CRM-специалист, который занимается настройкой и развитием корпоративных систем на базе Bitrix24 и amoCRM.</p>
+        <p>Моя задача — сделать так, чтобы сотрудники тратили меньше времени на рутинные действия, а руководители могли контролировать работу компании через понятные процессы и аналитику.</p>
+        <p>За время работы я принимала участие в проектах для компаний из различных сфер: добыча полезных ископаемых, страхование, образование, производство, недвижимость, IT и розничная торговля.</p>
+        <p>Я работаю с внутренними бизнес-процессами компании, настраиваю CRM, автоматизирую документооборот, проекты, регулярные задачи, аналитику и обработку заявок.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS / COMPETENCIES -->
+<section id="skills">
+  <div class="glow purple" style="top:100px; right:-200px;"></div>
+  <div class="container">
+    <div class="section-tag">Мои компетенции</div>
+    <div class="section-title">Три направления, которые дают бизнесу контроль и скорость</div>
+    <div class="comp-grid">
+      <div class="comp-card">
+        <div class="comp-icon">⚙️</div>
+        <h3>Bitrix24 / amoCRM</h3>
+        <ul>
+          <li>Настройка CRM под задачи компании</li>
+          <li>Создание бизнес-процессов</li>
+          <li>Автоматизация внутренних процессов</li>
+          <li>Проекты и рабочие группы</li>
+          <li>Смарт-процессы</li>
+          <li>Регулярные задачи</li>
+          <li>Документооборот</li>
+          <li>Генерация документов</li>
+          <li>Интеграции с CRM</li>
+        </ul>
+      </div>
+      <div class="comp-card">
+        <div class="comp-icon">📊</div>
+        <h3>Аналитика</h3>
+        <ul>
+          <li>Настройка BI Конструктора</li>
+          <li>SQL-запросы</li>
+          <li>CRM-отчеты</li>
+          <li>Показатели эффективности</li>
+          <li>Дашборды для руководителей</li>
+        </ul>
+      </div>
+      <div class="comp-card">
+        <div class="comp-icon">🤖</div>
+        <h3>Искусственный интеллект</h3>
+        <ul>
+          <li>Настройка AI-помощников</li>
+          <li>Автоматизация обработки заявок</li>
+          <li>Автоматизация внутренних обращений сотрудников</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="container">
+    <div class="section-tag">Чем я могу помочь</div>
+    <div class="section-title">Услуги, которые закрывают полный цикл работы с CRM</div>
+    <div class="service-grid">
+      <div class="service-card">
+        <div class="service-num">01</div>
+        <h3>Автоматизация бизнес-процессов</h3>
+        <p>Перевожу ручные процессы в цифровой формат. Настраиваю согласование документов, закупок, отпусков, внутренних заявок, договоров и других процессов внутри компании.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-num">02</div>
+        <h3>Настройка CRM</h3>
+        <p>Создаю удобную систему работы для отдела продаж, HR и других подразделений. Настраиваю карточки, поля, воронки, статусы и автоматизацию.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-num">03</div>
+        <h3>Проекты и задачи</h3>
+        <p>Настраиваю проекты для подразделений компании. Организовываю работу сотрудников через задачи и регулярные процессы. Это позволяет руководителям видеть загрузку сотрудников и контролировать выполнение работ.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-num">04</div>
+        <h3>Аналитика</h3>
+        <p>Создаю понятные отчеты для руководителей. Настраиваю BI Конструктор и SQL-запросы для отображения ключевых показателей компании.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-num">05</div>
+        <h3>AI-помощники</h3>
+        <p>Настраиваю интеллектуальных помощников для автоматизации обработки заявок клиентов и внутренних обращений сотрудников.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section id="why">
+  <div class="container">
+    <div class="section-tag">Почему со мной удобно работать</div>
+    <div class="section-title">Практический подход к CRM без лишней теории</div>
+    <div class="why-grid">
+      <div class="why-item">
+        <div class="why-check">✓</div>
+        <p>Понимаю особенности работы CRM-систем.</p>
+      </div>
+      <div class="why-item">
+        <div class="why-check">✓</div>
+        <p>Настраиваю процессы под реальные задачи бизнеса.</p>
+      </div>
+      <div class="why-item">
+        <div class="why-check">✓</div>
+        <p>Работаю как с небольшими компаниями, так и с крупными организациями.</p>
+      </div>
+      <div class="why-item">
+        <div class="why-check">✓</div>
+        <p>Настраиваю понятные процессы для сотрудников.</p>
+      </div>
+      <div class="why-item">
+        <div class="why-check">✓</div>
+        <p>Создаю удобную аналитику для руководителей.</p>
+      </div>
+      <div class="why-item">
+        <div class="why-check">✓</div>
+        <p>Всегда ориентируюсь на практическое использование системы.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TOOLS -->
+<section id="tools">
+  <div class="container">
+    <div class="section-tag">Инструменты</div>
+    <div class="section-title">С чем я работаю каждый день</div>
+    <div class="tools-grid">
+      <div class="tool-chip">Bitrix24</div>
+      <div class="tool-chip">amoCRM</div>
+      <div class="tool-chip">BI Конструктор</div>
+      <div class="tool-chip">SQL</div>
+      <div class="tool-chip">WhatsApp</div>
+      <div class="tool-chip">AI bots</div>
+      <div class="tool-chip">Документооборот</div>
+      <div class="tool-chip">CRM</div>
+    </div>
+  </div>
+</section>
+
+<!-- RESULTS -->
+<section id="results">
+  <div class="container">
+    <div class="section-tag">Результаты</div>
+    <div class="section-title">Направления проектов по внедрению CRM и автоматизации</div>
+    <p class="section-lead">За время работы я принимала участие в проектах по внедрению CRM и автоматизации внутренних процессов для компаний различных отраслей.</p>
+    <div class="results-grid">
+      <div class="result-chip"><div class="why-check">✓</div> Автоматизация документооборота</div>
+      <div class="result-chip"><div class="why-check">✓</div> Автоматизация HR-процессов</div>
+      <div class="result-chip"><div class="why-check">✓</div> Настройка CRM</div>
+      <div class="result-chip"><div class="why-check">✓</div> Настройка аналитики</div>
+      <div class="result-chip"><div class="why-check">✓</div> AI-автоматизация</div>
+      <div class="result-chip"><div class="why-check">✓</div> Проекты и задачи</div>
+      <div class="result-chip"><div class="why-check">✓</div> Генерация документов</div>
+      <div class="result-chip"><div class="why-check">✓</div> Автоматизация обработки заявок</div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="container">
+    <div class="section-tag">Мои проекты</div>
+    <div class="section-title">Кейсы внедрения CRM в разных отраслях</div>
+    <p class="section-lead">За время работы я участвовала во внедрении CRM-систем и автоматизации внутренних процессов для компаний из различных отраслей: добыча полезных ископаемых, страхование, образование, производство, коммерческая недвижимость и IT. Моя основная задача заключалась в настройке Bitrix24 и amoCRM под реальные бизнес-процессы компаний, создании автоматизаций, настройке аналитики и оптимизации ежедневной работы сотрудников.</p>
+
+    <!-- Project 1 -->
+    <div class="project-card">
+      <div class="project-head">
+        <div>
+          <h3>Altyn Samruk (ASQ)</h3>
+          <div class="project-industry">Добыча и переработка драгоценных металлов</div>
+        </div>
+        <div class="project-tools">
+          <span>Bitrix24</span><span>Бизнес-процессы</span><span>CRM</span><span>Проекты</span><span>Регулярные задачи</span><span>HR CRM</span><span>HH.kz</span>
+        </div>
+      </div>
+      <div class="project-body">
+        <div class="project-col">
+          <h4>Задача</h4>
+          <p>Компания уже использовала Bitrix24, однако многие внутренние процессы оставались неудобными для сотрудников. Документы согласовывались вручную, отсутствовала единая структура проектов между подразделениями, а HR-процесс требовал большого количества ручных действий.</p>
+        </div>
+        <div class="project-col">
+          <h4>Что было сделано</h4>
+          <ul>
+            <li>Настроила процесс согласования заявок на закуп</li>
+            <li>Настроила автоматическую генерацию документов</li>
+            <li>Реализовала бизнес-процесс согласования</li>
+            <li>Настроила проекты для подразделений компании</li>
+            <li>Организовала регулярные задачи для сотрудников каждого отдела</li>
+            <li>Настроила HR-воронку</li>
+            <li>Настроила работу с кандидатами через HH.kz</li>
+          </ul>
+        </div>
+        <div class="project-col">
+          <h4>Результат</h4>
+          <p>После внедрения сотрудники получили единый процесс работы с внутренними заявками и документами. Процесс согласования стал значительно удобнее, а проекты позволили структурировать работу подразделений и контролировать выполнение регулярных задач. HR-отдел получил централизованную систему обработки кандидатов.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Project 2 -->
+    <div class="project-card">
+      <div class="project-head">
+        <div>
+          <h3>Nomad Life</h3>
+          <div class="project-industry">Страховая компания</div>
+        </div>
+        <div class="project-tools">
+          <span>Bitrix24</span><span>BI Конструктор</span><span>SQL</span><span>AI</span><span>CRM</span><span>Проекты</span>
+        </div>
+      </div>
+      <div class="project-body">
+        <div class="project-col">
+          <h4>Задача</h4>
+          <p>Компании требовалась более удобная система контроля показателей и автоматизация обработки входящих обращений.</p>
+        </div>
+        <div class="project-col">
+          <h4>Что было сделано</h4>
+          <ul>
+            <li>Настроила BI Конструктор</li>
+            <li>Разработала SQL-запросы для аналитических отчетов</li>
+            <li>Настроила дашборды для руководителей</li>
+            <li>Настроила AI-помощника для обработки клиентских обращений</li>
+            <li>Настроила AI-помощника для сотрудников и страховых агентов</li>
+            <li>Настроила проекты для подразделений</li>
+            <li>Организовала регулярные задачи</li>
+            <li>Настроила CRM-воронки</li>
+          </ul>
+        </div>
+        <div class="project-col">
+          <h4>Результат</h4>
+          <p>Руководители получили удобные аналитические отчеты по ключевым показателям. Обработка обращений стала быстрее благодаря использованию AI-помощников. Проекты позволили структурировать ежедневную работу сотрудников и повысить прозрачность внутренних процессов.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Project 3 -->
+    <div class="project-card">
+      <div class="project-head">
+        <div>
+          <h3>Samruk Business Academy</h3>
+          <div class="project-industry">Корпоративное обучение</div>
+        </div>
+        <div class="project-tools">
+          <span>Bitrix24</span><span>WhatsApp</span><span>CRM</span><span>BI Конструктор</span>
+        </div>
+      </div>
+      <div class="project-body">
+        <div class="project-col">
+          <h4>Задача</h4>
+          <p>Автоматизировать работу с обращениями клиентов и централизовать коммуникацию.</p>
+        </div>
+        <div class="project-col">
+          <h4>Что было сделано</h4>
+          <ul>
+            <li>Настроила обработку входящих заявок</li>
+            <li>Подключила WhatsApp</li>
+            <li>Настроила CRM-воронки</li>
+            <li>Разработала аналитические отчеты</li>
+            <li>Настроила рабочие процессы для сотрудников</li>
+          </ul>
+        </div>
+        <div class="project-col">
+          <h4>Результат</h4>
+          <p>Все обращения начали поступать в единую систему. Менеджерам стало проще контролировать обработку заявок. Руководители получили аналитику по эффективности работы отдела.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Project 4 -->
+    <div class="project-card">
+      <div class="project-head">
+        <div>
+          <h3>CITIX</h3>
+          <div class="project-industry">IT и Smart City</div>
+        </div>
+        <div class="project-tools">
+          <span>Bitrix24</span><span>Бизнес-процессы</span><span>CRM</span><span>Проекты</span>
+        </div>
+      </div>
+      <div class="project-body">
+        <div class="project-col">
+          <h4>Задача</h4>
+          <p>Автоматизировать внутренние процессы компании и упростить работу сотрудников.</p>
+        </div>
+        <div class="project-col">
+          <h4>Что было сделано</h4>
+          <ul>
+            <li>Настраивала бизнес-процессы</li>
+            <li>Настраивала процессы согласования</li>
+            <li>Работала с генерацией документов</li>
+            <li>Настраивала проекты и задачи</li>
+            <li>Участвовала в настройке внутренних процессов компании</li>
+          </ul>
+        </div>
+        <div class="project-col">
+          <h4>Результат</h4>
+          <p>Удалось перевести значительную часть внутренних процессов в электронный формат. Сотрудники стали работать по единым сценариям, а согласование документов стало более удобным и прозрачным.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Project 5 -->
+    <div class="project-card">
+      <div class="project-head">
+        <div>
+          <h3>SmartPoint</h3>
+          <div class="project-industry">Коворкинг и IT Hub</div>
+        </div>
+        <div class="project-tools">
+          <span>Bitrix24</span><span>CRM</span><span>Проекты</span><span>Документы</span>
+        </div>
+      </div>
+      <div class="project-body">
+        <div class="project-col">
+          <h4>Задача</h4>
+          <p>Оптимизировать внутренние процессы отдела продаж.</p>
+        </div>
+        <div class="project-col">
+          <h4>Что было сделано</h4>
+          <ul>
+            <li>Настроила CRM</li>
+            <li>Настроила воронки</li>
+            <li>Настроила автоматизацию этапов</li>
+            <li>Настроила проекты</li>
+            <li>Настроила генерацию документов</li>
+          </ul>
+        </div>
+        <div class="project-col">
+          <h4>Результат</h4>
+          <p>Работа менеджеров стала более структурированной. Упростилась работа с документами и ежедневными задачами.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Project 6 -->
+    <div class="project-card">
+      <div class="project-head">
+        <div>
+          <h3>Synergy</h3>
+          <div class="project-industry">Образовательная организация</div>
+        </div>
+        <div class="project-tools">
+          <span>amoCRM</span><span>Digital Pipeline</span><span>Автоматизация</span><span>CRM</span><span>Документы</span>
+        </div>
+      </div>
+      <div class="project-body">
+        <div class="project-col">
+          <h4>Что было сделано</h4>
+          <ul>
+            <li>Настроила воронки продаж</li>
+            <li>Настроила автоматизацию этапов сделок</li>
+            <li>Настроила аналитику</li>
+            <li>Реализовала автоматическую генерацию документов</li>
+            <li>Настроила распределение заявок между менеджерами</li>
+            <li>Настроила автоматические сценарии работы CRM</li>
+          </ul>
+        </div>
+        <div class="project-col">
+          <h4>Результат</h4>
+          <p>Работа отдела продаж стала более структурированной. Сократилось количество ручных действий менеджеров. Повысилась прозрачность работы со сделками.</p>
+        </div>
+        <div class="project-col"></div>
+      </div>
+    </div>
+
+    <!-- Project 7 -->
+    <div class="project-card">
+      <div class="project-head">
+        <div>
+          <h3>КАМИ</h3>
+          <div class="project-industry">Производственная компания</div>
+        </div>
+        <div class="project-tools">
+          <span>amoCRM</span><span>CRM</span><span>Автоматизация</span>
+        </div>
+      </div>
+      <div class="project-body">
+        <div class="project-col">
+          <h4>Что было сделано</h4>
+          <ul>
+            <li>Провела аудит CRM-системы</li>
+            <li>Подготовила техническое задание</li>
+            <li>Настроила автоматизацию процессов</li>
+            <li>Подключила источники обращений</li>
+            <li>Провела обучение сотрудников работе в системе</li>
+          </ul>
+        </div>
+        <div class="project-col">
+          <h4>Результат</h4>
+          <p>Система была приведена к единому стандарту работы. Сотрудники начали использовать CRM более эффективно, а обработка заявок стала более удобной и структурированной.</p>
+        </div>
+        <div class="project-col"></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="container">
+    <div class="contact-wrap">
+      <div class="glow purple" style="top:-120px; left:20%;"></div>
+      <div class="contact-inner">
+        <div class="section-tag">Контакты</div>
+        <div class="section-title" style="text-align:center;">Давайте обсудим ваш проект</div>
+        <p>Если вы планируете внедрение CRM, хотите автоматизировать внутренние процессы или доработать существующую систему, буду рада обсудить задачи и предложить подходящее решение.</p>
+        <div class="contact-methods">
+          <a class="contact-card" href="tel:+77078477247">
+            <div class="label">Телефон</div>
+            <div class="value">+7 707 847 72 47</div>
+          </a>
+          <a class="contact-card" href="mailto:serikbajzanerka@gmail.com">
+            <div class="label">Email</div>
+            <div class="value">serikbajzanerka@gmail.com</div>
+          </a>
+          <a class="contact-card" href="https://t.me/zhanerke_sg" target="_blank" rel="noopener">
+            <div class="label">Telegram</div>
+            <div class="value">@zhanerke_sg</div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  &copy; 2026 <strong>Жанерке Серикбай</strong> — CRM Specialist | Bitrix24 | amoCRM
+</footer>
+
+<script>
+  // Header background on scroll
+  const header = document.getElementById('site-header');
+  window.addEventListener('scroll', () => {
+    header.classList.toggle('scrolled', window.scrollY > 20);
+  });
+
+  // Mobile menu toggle
+  const burger = document.getElementById('burger');
+  const navList = document.getElementById('nav-list');
+  burger.addEventListener('click', () => {
+    navList.classList.toggle('open');
+    burger.classList.toggle('active');
+  });
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', () => navList.classList.remove('open'));
+  });
+
+  // Active link highlighting on scroll
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-link');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(sec => {
+      const top = sec.offsetTop - 140;
+      if (window.scrollY >= top) current = sec.getAttribute('id');
+    });
+    navLinks.forEach(link => {
+      link.style.color = link.getAttribute('href') === '#' + current ? 'var(--text)' : '';
+    });
+  });
+
+  // Scroll-triggered reveal animations
+  (function () {
+    // Grids get a staggered cascade — each child fades in slightly after the previous one
+    const staggerContainers = document.querySelectorAll(
+      '.comp-grid, .service-grid, .why-grid, .tools-grid, .results-grid, .hero-side, .contact-methods'
+    );
+    staggerContainers.forEach(parent => {
+      Array.from(parent.children).forEach((child, i) => {
+        child.classList.add('reveal');
+        child.style.transitionDelay = Math.min(i * 90, 360) + 'ms';
+      });
+    });
+
+    // Standalone blocks reveal on their own, no stagger
+    const singleSelectors = [
+      '.hero .eyebrow', '.hero h1', '.hero-role', '.hero p', '.hero-actions',
+      '.section-tag', '.section-title', '.section-lead',
+      '.about-grid > div',
+      '.project-card', '.contact-wrap'
+    ];
+    singleSelectors.forEach(sel => {
+      document.querySelectorAll(sel).forEach(el => el.classList.add('reveal'));
+    });
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  })();
+</script>
+
+</body>
+</html>
